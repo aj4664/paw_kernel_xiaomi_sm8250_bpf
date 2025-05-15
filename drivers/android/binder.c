@@ -83,6 +83,9 @@
 #include <uapi/linux/android/binder.h>
 #include <uapi/linux/android/binderfs.h>
 #include <uapi/linux/sched/types.h>
+#ifdef CONFIG_RE_KERNEL_FEATURE
+#include <linux/re_kernel.h>
+#endif
 
 #include <asm/cacheflush.h>
 
@@ -3123,6 +3126,20 @@ static void binder_transaction(struct binder_proc *proc,
 		target_proc->tmp_ref++;
 		binder_inner_proc_unlock(target_thread->proc);
 
+#ifdef CONFIG_RE_KERNEL_FEATURE
+		if (target_proc
+			&& (NULL != target_proc->tsk)
+			&& (NULL != proc->tsk)
+			&& (task_uid(target_proc->tsk).val <= MAX_SYSTEM_UID)
+			&& (proc->pid != target_proc->pid)
+			&& line_is_frozen(target_proc->tsk)) {
+				char binder_kmsg[PACKET_SIZE];
+				snprintf(binder_kmsg, sizeof(binder_kmsg),
+					"type=Binder,bindertype=reply,oneway=0,from_pid=%d,from=%d,target_pid=%d,target=%d;",
+					proc->pid, task_uid(proc->tsk).val, target_proc->pid, task_uid(target_proc->tsk).val);
+				send_netlink_message(binder_kmsg, strlen(binder_kmsg));
+		}
+#endif
 #ifdef CONFIG_MILLET
 		if (target_proc
 			&& target_proc->tsk
@@ -3191,6 +3208,20 @@ static void binder_transaction(struct binder_proc *proc,
 			goto err_dead_binder;
 		}
 		e->to_node = target_node->debug_id;
+#ifdef CONFIG_RE_KERNEL_FEATURE
+		if (target_proc
+			&& (NULL != target_proc->tsk)
+			&& (NULL != proc->tsk)
+			&& (task_uid(target_proc->tsk).val > MIN_USERAPP_UID)
+			&& (proc->pid != target_proc->pid)
+			&& line_is_frozen(target_proc->tsk)) {
+				char binder_kmsg[PACKET_SIZE];
+				snprintf(binder_kmsg, sizeof(binder_kmsg),
+					"type=Binder,bindertype=transaction,oneway=%d,from_pid=%d,from=%d,target_pid=%d,target=%d;",
+					tr->flags & TF_ONE_WAY, proc->pid, task_uid(proc->tsk).val, target_proc->pid, task_uid(target_proc->tsk).val);
+				send_netlink_message(binder_kmsg, strlen(binder_kmsg));
+		}
+#endif
 #ifdef CONFIG_MILLET
 		if (target_proc
 			&& target_proc->tsk
