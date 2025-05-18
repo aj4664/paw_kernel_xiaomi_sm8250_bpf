@@ -271,9 +271,6 @@ static inline int freezable_schedule_hrtimeout_range(ktime_t *expires,
 #else /* !CONFIG_FREEZER */
 static inline bool frozen(struct task_struct *p) { return false; }
 static inline bool freezing(struct task_struct *p) { return false; }
-#if defined(CONFIG_MILLET) && defined(CONFIG_PACKAGE_RUNTIME_INFO)
-static inline bool freezing_millet(struct task_struct *p) { return false; }
-#endif
 static inline void __thaw_task(struct task_struct *t) {}
 
 static inline bool __refrigerator(bool check_kthr_stop) { return false; }
