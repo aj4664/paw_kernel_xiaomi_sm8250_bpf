@@ -440,6 +440,16 @@ static struct binder_buffer *binder_alloc_new_buf_locked(
 			struct task_struct *owner;
 
 #ifdef CONFIG_MILLET
+			owner = binder_buff_owner(alloc);
+			if (owner) {
+				memset(&data, 0, sizeof(struct millet_data));
+				data.pri[0] =  BINDER_BUFF_WARN;
+				data.mod.k_priv.binder.trans.dst_task = owner;
+				data.mod.k_priv.binder.trans.src_task = current;
+				millet_sendmsg(BINDER_TYPE, owner, &data);
+			}
+	}
+#endif
 	if (is_async &&
 		(alloc->free_async_space < WARN_AHEAD_MSGS * (size + sizeof(struct binder_buffer))
 		|| alloc->free_async_space < binder_warn_ahead_space)) {
