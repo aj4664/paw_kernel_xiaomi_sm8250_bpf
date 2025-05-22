@@ -750,5 +750,12 @@ int dsi_display_esd_irq_ctrl(struct dsi_display *display,
 struct dsi_display *get_main_display(void);
 
 void dsi_display_set_fod_ui(struct dsi_display *display, bool status);
+#ifdef CONFIG_TECHPACK_XIAOMI_FOD_PATCH
+struct dsi_display *get_primary_display(void);
+
+
+
+
+#endif
 
 #endif /* _DSI_DISPLAY_H_ */

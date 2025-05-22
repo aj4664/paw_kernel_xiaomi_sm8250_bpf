@@ -37,6 +37,17 @@
 
 #define to_dsi_bridge(x)     container_of((x), struct dsi_bridge, base)
 
+#ifdef CONFIG_TECHPACK_XIAOMI_FOD_PATCH
+
+
+
+
+
+
+static int mi_fod_last_backlight_min = 8;
+#endif
+
+
 static atomic64_t g_param = ATOMIC64_INIT(0);
 
 int dsi_display_set_disp_param(struct drm_connector *connector,
