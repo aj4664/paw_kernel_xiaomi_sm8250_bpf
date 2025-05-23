@@ -11,11 +11,11 @@ TARGET_DEVICE=$1
 
 if [ -z "$1" ]; then
     echo "Error: No argument provided, please specific a target device." 
-    echo "If you need KernelSU, please add [\ksu] as the second arg."
+    echo "If you need KernelSU Next, please add [\ksu] as the second arg."
     echo "Examples:"
-    echo "Build for lmi(K30 Pro/POCO F2 Pro) without KernelSU:"
+    echo "Build PawKernel for lmi(K30 Pro/POCO F2 Pro) without KernelSU:"
     echo "    bash build.sh lmi"
-    echo "Build for umi(Mi10) with KernelSU:"
+    echo "Build PawKernel for umi(Mi10) with KernelSU:"
     echo "    bash build.sh umi ksu"
     exit 1
 fi
@@ -95,7 +95,7 @@ echo "TARGET_DEVICE: $TARGET_DEVICE"
 
 if [ $KSU_ENABLE -eq 1 ]; then
     echo "KSU is enabled"
-    curl -LSs "https://raw.githubusercontent.com/rifsxd/KernelSU-Next/next/kernel/setup.sh" | bash -
+    curl -LSs "https://raw.githubusercontent.com/rifsxd/KernelSU-Next/next-susfs/kernel/setup.sh" | bash -s next-susfs
 else
     echo "KSU is disabled"
 fi
@@ -110,7 +110,7 @@ echo "Clone AnyKernel3 for packing kernel (repo: https://github.com/liyafe1997/A
 git clone https://github.com/liyafe1997/AnyKernel3 -b kona --single-branch --depth=1 anykernel
 
 # Add date to local version
-local_version_str="-perf"
+local_version_str="-PawKernel-umi-hotasf"
 local_version_date_str="-$(date +%Y%m%d)-${GIT_COMMIT_ID}-perf"
 
 sed -i "s/${local_version_str}/${local_version_date_str}/g" arch/arm64/configs/${TARGET_DEVICE}_defconfig
