@@ -196,6 +196,4 @@ obj-$(CONFIG_SENSORS_SSC)	+= sensors/
 obj-$(CONFIG_XIAOMI_MIUI)	+= xiaomi/
 
 obj-$(CONFIG_KSU) += kernelsu/
-obj-$(CONFIG_MIHW)		+= mihw/
-obj-$(CONFIG_KSU)		+= kernelsu/
 obj-y                   += fragmention/

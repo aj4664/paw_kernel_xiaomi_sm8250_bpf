@@ -60,7 +60,6 @@ bool freezing_slow_path(struct task_struct *p)
 }
 EXPORT_SYMBOL(freezing_slow_path);
 
-<<<<<<< HEAD
 #if defined(CONFIG_MILLET) && defined(CONFIG_PACKAGE_RUNTIME_INFO)
 bool freezing_slow_path_millet(struct task_struct *p)
 {
@@ -88,8 +87,6 @@ bool freezing_slow_path_millet(struct task_struct *p)
 }
 #endif
 
-=======
->>>>>>> 5125a967816f (Kernel: Drop CONFIG_PACKAGE_RUNTIME_INFO Xiaomi Package)
 /* Refrigerator is place where frozen processes are stored :-). */
 bool __refrigerator(bool check_kthr_stop)
 {
@@ -105,14 +102,12 @@ bool __refrigerator(bool check_kthr_stop)
 
 		spin_lock_irq(&freezer_lock);
 		current->flags |= PF_FROZEN;
-<<<<<<< HEAD
 
 #if defined(CONFIG_MILLET) && defined(CONFIG_PACKAGE_RUNTIME_INFO)
 		if (!freezing_millet(current) ||
 #else
-=======
->>>>>>> 5125a967816f (Kernel: Drop CONFIG_PACKAGE_RUNTIME_INFO Xiaomi Package)
 		if (!freezing(current) ||
+#endif
 		    (check_kthr_stop && kthread_should_stop()))
 			current->flags &= ~PF_FROZEN;
 		spin_unlock_irq(&freezer_lock);
